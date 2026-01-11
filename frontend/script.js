@@ -19,7 +19,7 @@ async function askQuestion(q){
   form.append('question', q);
   form.append('top_k', '5');
   try{
-    const res = await fetch('/chat', { method: 'POST', body: form });
+    const res = await fetch('/api/chat', { method: 'POST', body: form });
     if(!res.ok){
       const err = await res.json();
       if(spinner) { spinner.classList.remove('spin'); spinner.setAttribute('aria-hidden','true'); }
@@ -68,7 +68,7 @@ ingestForm.addEventListener('submit', async (e)=>{
   ingestBtn.disabled = true;
   ingestBtn.textContent = 'Ingesting...';
   try{
-    const res = await fetch('/ingest', { method: 'POST', body: form });
+    const res = await fetch('/api/ingest', { method: 'POST', body: form });
     if(!res.ok) throw new Error('Server error');
     const data = await res.json();
     alert('Ingested: '+(data.chunks_added||0)+' chunks');
@@ -85,7 +85,7 @@ ingestForm.addEventListener('submit', async (e)=>{
 
 async function refreshStatus(){
   try{
-    const r = await fetch('/status');
+    const r = await fetch('/api/status');
     if(!r.ok) { statusEl.textContent='Unavailable'; return }
     const s = await r.json();
     statusEl.textContent = s.ingested ? `CV ingested — ${s.chunks} chunks` : 'No CV ingested';
